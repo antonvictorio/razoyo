@@ -27,7 +27,7 @@ Razoyo.Cars.create_car(%{
   img_url: "https://d1hv7ee95zft1i.cloudfront.net/custom/car-model-photo/original/2018-aston-martin-db11-coupe-front-5aaa44c314b1d.webp",
   price: "10,500",
   mpg: "11",
-  seat: "2"
+  seats: "2"
 })
 
 Razoyo.Cars.create_car(%{
