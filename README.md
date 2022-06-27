@@ -1,4 +1,6 @@
-# Razoyo
+# Razoyo front end test (Phoenix + React & Tailwind)
+
+# Kindly install react and run seeds.
 
 To start your Phoenix server:
 
