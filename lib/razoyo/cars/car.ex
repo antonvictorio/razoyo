@@ -27,7 +27,15 @@ defmodule Razoyo.Cars.Car do
   @doc false
   def changeset(car, attrs) do
     car
-    |> cast(attrs, [:year, :make])
+    |> cast(attrs, [
+      :year,
+      :make,
+      :model,
+      :img_url,
+      :price,
+      :mpg,
+      :seats
+    ])
     |> validate_required([:make])
   end
 end
