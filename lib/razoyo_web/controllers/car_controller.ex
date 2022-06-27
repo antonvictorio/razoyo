@@ -14,6 +14,11 @@ defmodule RazoyoWeb.CarController do
     json conn, cars
   end
 
+  def show_api(conn, %{"id" => id}) do
+    car = Cars.get_car!(id)
+    json conn, car
+  end
+
   def new(conn, _params) do
     changeset = Cars.change_car(%Car{})
     render(conn, "new.html", changeset: changeset)

@@ -1,31 +1,68 @@
 import React, { useState, useEffect }  from 'react'
 
-interface GreeterProps {
+interface Product {
     name: string;
 }
-const Greeter: React.FC<GreeterProps> = (props: GreeterProps) => {
-    const name = props.name
-    const [error, setError] = useState(null)
-    const [isLoaded, setIsLoaded] = useState(false)
-    const [cars, setCars] = useState([])
+const Product: React.FC<ProductProps> = (props: ProductProps) => {
 		const apiUrl = "http://localhost:4000/api/cars"
+		const showApiUrl = "http://localhost:4000/api/car"
 
+    const [error, setError] = useState(null)
+    const [cars, setCars] = useState([])
+		const [id, setId] = useState("aa")
+		const [open, setOpen] = useState(false)
+		const [currentCar, setCurrentCar]= useState ({
+			year: "",
+			make: "",
+			model: "",
+			price: "",
+			mpg: "",
+			seats: "",
+			img_url: ""
+		})
+	
     useEffect(() => {
         fetch(apiUrl)
             .then(res => res.json())
             .then(
                 (data) => {
-                    setIsLoaded(true);
-                    setCars(data);
+                    setCars(data)
                 },
                 (error) => {
-                    setIsLoaded(true);
-                    setError(error);
+                    setError(error)
                 }
             )
       }, [])
     
-    return (
+		toggleButtonState = (e) => {
+			let carId = e.target.value
+
+			fetch(`${showApiUrl}?id=${carId}`)
+			.then(res => res.json())
+			.then(
+					(data) => {
+							setOpen(true)
+							setCurrentCar({
+								year: data.year,
+								make: data.make,
+								model: data.model,
+								price: data.price,
+								mpg: data.mpg,
+								seats: data.seats,
+								img_url: data.img_url
+							})
+					},
+					(error) => {
+							setError(error)
+					}
+			)
+		}
+
+		closeProductDetail = () => {
+			setOpen(false)
+		}
+
+		let carousel = 
 			cars.map((car) => 
 			<div className="max-w-sm bg-white rounded-lg shadow-md ml-5 mr-2" key={`${car.year}-${car.model}`}>
 				<a href="#">
@@ -44,13 +81,51 @@ const Greeter: React.FC<GreeterProps> = (props: GreeterProps) => {
 						</div>
 						<div className="flex justify-between items-center">
 							<span className="text-3xl font-bold text-gray-900">${car.price}</span>
-							<button className="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button" data-modal-toggle="defaultModal">
-  							View
+							<button className="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button" onClick={toggleButtonState} value={car.id}>
+								View
 							</button>
 						</div>
 				</div>
 			</div>
-			)
-    );
-};
-export default Greeter;
+		)
+
+		let productHighlight = 
+			<div className={`flex content-center mt-3 ${open ? '' : 'invisible'}`}>
+				<div className="flex justify-center items-center lg:flex-row flex-col gap-8 bg-white rounded-lg shadow-md p-6">
+					{/* <!-- Description Div --> */}
+					<div className=" w-full sm:w-96 md:w-8/12  lg:w-6/12 flex lg:flex-row flex-col lg:gap-8 sm:gap-6 gap-4">
+						<div className=" w-full lg:w-8/12 bg-gray-100 flex justify-center items-center">
+							<img src={currentCar.img_url} alt="Wooden Chair Previw" />
+						</div>
+					</div>
+					<div className=" w-full sm:w-96 md:w-8/12 lg:w-6/12 items-center">
+					<button onClick={closeProductDetail} type="button" className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500" style={{float: `right`}}>
+						<span className="sr-only">Close menu</span>
+						<svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+						</svg>
+					</button>
+						<h2 className="font-semibold lg:text-4xl text-3xl lg:leading-9 leading-7 text-gray-800 mt-4">{`${currentCar.year} - ${currentCar.make} ${currentCar.model}`}</h2>
+						<p className=" font-normal text-base leading-6 text-gray-600 mt-10">
+							Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+						</p>
+						<p className=" font-bold text-l lg:leading-6 leading-5 mt-6 ">MPG: {currentCar.mpg}</p>
+						<p className=" font-bold text-l lg:leading-6 leading-5 mt-6 ">Seats: {currentCar.seats}</p>
+						<p className=" font-bold text-l lg:leading-6 leading-5 mt-6 ">Price: ${currentCar.price}</p>
+					</div>
+
+				</div>
+			</div>
+
+    return (
+			<div>
+				<div className="flex">
+					{carousel}
+				</div>
+				<div className="flex">
+					{productHighlight}
+				</div>
+			</div>
+    )
+}
+export default Product;

@@ -3,6 +3,7 @@ defmodule Razoyo.Cars.Car do
   import Ecto.Changeset
 
   @derive {Jason.Encoder, only: [
+    :id,
     :year,
     :make,
     :model,

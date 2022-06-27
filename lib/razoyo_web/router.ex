@@ -22,6 +22,7 @@ defmodule RazoyoWeb.Router do
 
     scope "/api" do
       get "/cars", CarController, :search
+      get "/car", CarController, :show_api
     end
   end
 

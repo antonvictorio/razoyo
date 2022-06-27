@@ -43,7 +43,13 @@ liveSocket.connect()
 window.liveSocket = liveSocket
 
 import React from "react";
-import ReactDOM from "react-dom";
-import Greeter from "./greeter";
-const greeting = document.getElementById("greeting");
-ReactDOM.render(<Greeter name="Phoenix" />, greeting);
+import ReactDOM from "react-dom"
+import Product from "./greeter"
+
+const greeting = document.getElementById("container")
+
+ReactDOM.render(
+    <div className="text-gray-900 p-8">
+        <Product />
+    </div>, greeting
+)
